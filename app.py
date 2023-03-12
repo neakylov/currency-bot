@@ -1,5 +1,6 @@
 import asyncio
 import handlers
+import FSM
 
 from loader import dp, bot
 

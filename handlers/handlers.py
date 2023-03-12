@@ -11,7 +11,8 @@ from data import config
 async def cmd_start(message: types.Message):
     buttons = [
         [
-            types.KeyboardButton(text='Exchange rate')
+            types.KeyboardButton(text='Exchange rate'),
+            types.KeyboardButton(text='Currency converter')
         ]
     ]
     keyboard = types.ReplyKeyboardMarkup(
