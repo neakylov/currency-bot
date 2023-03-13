@@ -7,6 +7,7 @@ from aiogram import types
 from aiogram.filters import Text
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
+from keyboards.default.start_buttons import start_buttons, cancel_button
 
 
 class Converter(StatesGroup):
@@ -30,18 +31,9 @@ rates = ['USD', 'AED', 'AFN', 'ALL', 'AMD', 'ANG', 'AOA', 'ARS', 'AUD', 'AWG', '
 
 @dp.message(Text('Currency converter'))
 async def converter(message: types.Message, state: FSMContext) -> None:
-    buttons = [
-        [
-            types.KeyboardButton(text='Cancel'),
-        ]
-    ]
-    keyboard = types.ReplyKeyboardMarkup(
-        keyboard=buttons,
-        resize_keyboard=True
-    )
     await state.set_state(Converter.first_currency)
     await message.answer(f'Select the currency you want to convert.\nExample: \"USD\".',
-                         reply_markup=keyboard)
+                         reply_markup=cancel_button())
 
 
 @dp.message(Text('Cancel'))
@@ -49,18 +41,8 @@ async def cancel_handler(message: types.Message, state: FSMContext) -> None:
     current_state = await state.get_state()
     if current_state is None:
         return
-    buttons = [
-        [
-            types.KeyboardButton(text='Exchange rate'),
-            types.KeyboardButton(text='Currency converter')
-        ]
-    ]
-    keyboard = types.ReplyKeyboardMarkup(
-        keyboard=buttons,
-        resize_keyboard=True
-    )
     await state.clear()
-    await message.answer('Cancelled', reply_markup=keyboard)
+    await message.answer('Cancelled', reply_markup=start_buttons())
 
 
 @dp.message(Converter.first_currency)
@@ -106,20 +88,11 @@ async def second(message: types.Message, state: FSMContext) -> None:
 
 
 async def converted(message: types.Message, data: Dict[str, Any]) -> None:
-    buttons = [
-        [
-            types.KeyboardButton(text='Exchange rate'),
-            types.KeyboardButton(text='Currency converter')
-        ]
-    ]
-    keyboard = types.ReplyKeyboardMarkup(
-        keyboard=buttons,
-        resize_keyboard=True
-    )
     text = message.text.upper()
     first_curr = data['first_currency']
     response = requests.get(config.URL).json()
     from_curr = response.get('conversion_rates')[first_curr]
     to_curr = response.get('conversion_rates')[text]
     quantity = data['quantity']
-    await message.answer(f'Converted: {round((to_curr / from_curr) * float(quantity), 2)} {text}', reply_markup=keyboard)
+    await message.answer(f'Converted: {round((to_curr / from_curr) * float(quantity), 2)} {text}',
+                         reply_markup=start_buttons())
