@@ -48,7 +48,7 @@ async def cancel_handler(message: types.Message, state: FSMContext) -> None:
 @dp.message(Converter.first_value)
 async def first(message: types.Message, state: FSMContext) -> None:
     if message.text.upper() in currencies:
-        await state.update_data(first_currency=message.text.upper())
+        await state.update_data(first_value=message.text.upper())
         await state.set_state(Converter.quantity)
         await message.answer('Enter the quantity.\nExample: 13.44')
     else:
@@ -79,7 +79,7 @@ async def enter_quantity(message: types.Message, state: FSMContext) -> None:
 @dp.message(Converter.second_value)
 async def second(message: types.Message, state: FSMContext) -> None:
     if message.text.upper() in currencies:
-        data = await state.update_data(second_currency=message.text.upper())
+        data = await state.update_data(second_value=message.text.upper())
         await state.clear()
         await converted(message=message, data=data)
     else:
