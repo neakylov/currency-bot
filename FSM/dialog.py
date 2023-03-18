@@ -29,20 +29,20 @@ currencies = ['USD', 'AED', 'AFN', 'ALL', 'AMD', 'ANG', 'AOA', 'ARS', 'AUD', 'AW
               'VND', 'VUV', 'WST', 'XAF', 'XCD', 'XDR', 'XOF', 'XPF', 'YER', 'ZAR', 'ZMW', 'ZWL']
 
 
-@dp.message(Text('Currency converter'))
+@dp.message(Text('Конвертер валют'))
 async def converter(message: types.Message, state: FSMContext) -> None:
     await state.set_state(Converter.first_value)
-    await message.answer(f'Select the currency you want to convert.\nExample: \"USD\".',
+    await message.answer(f'Выберите валюту, которую хотите конвертировать.\nПример: \"USD\".',
                          reply_markup=cancel_button())
 
 
-@dp.message(Text('Cancel'))
+@dp.message(Text('Отмена'))
 async def cancel_handler(message: types.Message, state: FSMContext) -> None:
     current_state = await state.get_state()
     if current_state is None:
         return
     await state.clear()
-    await message.answer('Cancelled', reply_markup=start_buttons())
+    await message.answer('Отменено', reply_markup=start_buttons())
 
 
 @dp.message(Converter.first_value)
@@ -50,7 +50,7 @@ async def first(message: types.Message, state: FSMContext) -> None:
     if message.text.upper() in currencies:
         await state.update_data(first_value=message.text.upper())
         await state.set_state(Converter.quantity)
-        await message.answer('Enter the quantity.\nExample: 13.44')
+        await message.answer('Отправьте количество валюты.\nПример: 13.44')
     else:
         await state.set_state(Converter.first_value)
         await message.answer(f'Error: InvalidCurrency. Try again.')
@@ -69,11 +69,11 @@ async def enter_quantity(message: types.Message, state: FSMContext) -> None:
     result = ''.join(message_quantity)
     if result == '':
         await state.set_state(Converter.quantity)
-        await message.answer('The message must be a number')
+        await message.answer('Сообщение должно быть числом.\nПример: 13.44.')
     else:
         await state.update_data(quantity=float(result))
         await state.set_state(Converter.second_value)
-        await message.answer('Choose the currency you will receive.\nExample: \"EUR\".')
+        await message.answer('Выберите валюту, которую хотите получить.\nПример: \"EUR\".')
 
 
 @dp.message(Converter.second_value)

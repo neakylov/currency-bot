@@ -8,14 +8,14 @@ def main():
 
 def start_buttons() -> ReplyKeyboardMarkup:
     keyboard = ReplyKeyboardBuilder()
-    keyboard.add(types.KeyboardButton(text='Exchange rate'))
-    keyboard.add(types.KeyboardButton(text='Currency converter'))
+    keyboard.add(types.KeyboardButton(text='Курс валют'))
+    keyboard.add(types.KeyboardButton(text='Конвертер валют'))
     return keyboard.as_markup(resize_keyboard=True)
 
 
 def cancel_button() -> ReplyKeyboardMarkup:
     keyboard = ReplyKeyboardBuilder()
-    keyboard.add(types.KeyboardButton(text='Cancel'))
+    keyboard.add(types.KeyboardButton(text='Отмена'))
     return keyboard.as_markup(resize_keyboard=True)
 
 

@@ -20,13 +20,14 @@ def get_data():
 
 @dp.message(Command('start'))
 async def cmd_start(message: types.Message):
-    await message.answer(f'Hello! '
-                         f'This bot sends the exchange rate against the dollar.'
-                         f'\nClick the "Exchange rate" button.',
+    await message.answer(f'Привет! '
+                         f'Этот бот знает курс валют к доллару.'
+                         f'\n* Нажми кнопку "Курс валют" чтобы узнать нынешний курс.'
+                         f'\n* Нажми кнопку "Конвертер валют" чтобы конвертировать валюту.',
                          reply_markup=start_buttons())
 
 
-@dp.message(Text('Exchange rate'))
+@dp.message(Text('Курс валют'))
 async def exchange(message: types.Message):
     text = get_data()
     await message.reply(''.join(text[:25]), reply_markup=pagination(page=1))
